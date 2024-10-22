@@ -40,7 +40,7 @@ jobs:
         TOEMAILBC : ${{ secrets.TOEMAILBC }}
         FROMEMAIL : ${{ secrets.FROMEMAIL }}
       run: |
-        python appointment_scraper.py
+        python main.py
 
     - name: Lint with flake8
       run: |
