@@ -4,6 +4,7 @@ import time
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import os
+import logging
 
 # Fetch secrets from environment variables
 FROMEMAIL = os.environ.get('FROMEMAIL')
@@ -44,28 +45,28 @@ def scrape_website(url):
                     last_checked = row.select_one('td span.badge').get_text(strip=True)  # Get the last checked time
                     
                     # Log the fetched data for debugging
-                    #print(f"Country: {country}, Availability: {availability or no_availability}, Last Checked: {last_checked}")
-                    # print(availability_element )
-                    # print(no_availability)
-                    # print(country+"......................")
-                    #print(no_availability + "no Avail" )
+                    #logging.info(f"Country: {country}, Availability: {availability or no_availability}, Last Checked: {last_checked}")
+                    # logging.info(availability_element )
+                    # logging.info(no_availability)
+                    # logging.info(country+"......................")
+                    #logging.info(no_availability + "no Avail" )
                     # Write availability status to a file
                     with open("row.txt", 'a', encoding='utf-8') as file:
                         file.write(f"{country}: {availability or no_availability}\n")
 
                     # If appointment is available, send email
                     if no_availability or availability  != None:
-                        print(country)
+                        logging.info(country)
                         send_email(country, url)
 
                 except AttributeError as e:
-                    print(f"Error parsing row: {e}. Skipping this row.")
+                    logging.info(f"Error parsing row: {e}. Skipping this row.")
 
         else:
-            print(f"Failed to fetch the website. Status code: {response.status_code}")
+            logging.info(f"Failed to fetch the website. Status code: {response.status_code}")
 
     except Exception as e:
-        print(f"An error occurred while scraping: {e}")
+        logging.info(f"An error occurred while scraping: {e}")
 
 # Function to send an email via SendGrid
 def send_email(country, appointment_url):
@@ -89,13 +90,13 @@ def send_email(country, appointment_url):
     try:
         sg = SendGridAPIClient(YOURSENDGRIDAPIKEY)  # Replace with your SendGrid API key
         response_rishav = sg.send(message_rishav)
-        print(f"Email sent to Rishav: {response_rishav.status_code}")
+        logging.info(f"Email sent to Rishav: {response_rishav.status_code}")
         
         response_basab = sg.send(message_basab)
-        print(f"Email sent to Basabdatta: {response_basab.status_code}")
+        logging.info(f"Email sent to Basabdatta: {response_basab.status_code}")
 
     except Exception as e:
-        print(f"Error sending email: {e}")
+        logging.info(f"Error sending email: {e}")
 
 # URL of the website to scrape
 url = 'https://schengenappointments.com/in/dublin/tourism'
