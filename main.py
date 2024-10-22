@@ -3,6 +3,13 @@ from bs4 import BeautifulSoup
 import time
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+import os
+
+# Fetch secrets from environment variables
+FROMEMAIL = os.environ.get('FROMEMAIL')
+TOEMAILBC = os.environ.get('TOEMAILBC')
+TOEMAILRSG = os.environ.get('TOEMAILRSG')
+YOURSENDGRIDAPIKEY = os.environ.get('YOURSENDGRIDAPIKEY')
 
 # Function to scrape website fields
 def scrape_website(url):
