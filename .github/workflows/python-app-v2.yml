@@ -3,7 +3,7 @@ name: Python Scheduled Job
 on:
   schedule:
     # This runs the script every 30 minutes
-    - cron: '*/30 * * * *'
+    - cron: '*/1 * * * *'
 
 jobs:
   scrape-job:
