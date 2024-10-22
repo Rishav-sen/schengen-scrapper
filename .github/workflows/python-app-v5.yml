@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:  # This allows manual triggering of the workflow
 
 permissions:
   contents: read
@@ -30,8 +31,16 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install flake8 pytest sendgrid requests beautifulsoup4
+
+    - name: Run scraping script
+      env:
+        YOURSENDGRIDAPIKEY: ${{ secrets.YOURSENDGRIDAPIKEY }}  # Use the secret here
+        TOEMAILRSG : ${{ secrets.TOEMAILRSG }}
+        TOEMAILBC : ${{ secrets.TOEMAILBC }}
+        FROMEMAIL : ${{ secrets.FROMEMAIL }}
+      run: |
+        python appointment_scraper.py
 
     - name: Lint with flake8
       run: |
@@ -40,4 +49,4 @@ jobs:
 
     - name: Test with pytest
       run: |
-       python main.py
+        pytest
